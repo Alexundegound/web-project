@@ -1,48 +1,84 @@
 import "./Input.scss";
-import { Field, ErrorMessage as Error, useFormikContext } from "formik";
 import { useState, useEffect } from "react";
 
-export const Input = ({ id, label, name, type, placeholder, isNumber }) => {
-  const { setFieldValue, values } = useFormikContext();
-  const [displayValue, setDisplayValue] = useState("");
+export const Input = ({
+                          id,
+                          label,
+                          name,
+                          placeholder,
+                          isNumber,
+                          value: propValue = "",
+                          onChange,
+                          as = 'input',
+                          children,
+                          error
+                      }) => {
+    const [displayValue, setDisplayValue] = useState(propValue);
 
-  useEffect(() => {
-    const value = values[name] !== undefined ? values[name] : "";
+    useEffect(() => {
+        setDisplayValue(propValue);
+    }, [propValue]);
 
-    if (isNumber) {
-      const safeValue = Math.max(0, value || 0);
-      setDisplayValue(safeValue === 0 ? "" : safeValue.toLocaleString());
-    } else {
-      setDisplayValue(value);
+    const handleChange = (e) => {
+        let newValue = e.target.value;
+
+        if (isNumber) {
+            newValue = newValue.replace(/[^0-9]/g, "");
+        }
+
+        setDisplayValue(newValue);
+
+        if (onChange) {
+            onChange(e);
+        }
+    };
+
+    if (as === 'select') {
+        return (
+            <div className="input">
+                {label && <label className="input__label" htmlFor={id}>{label}</label>}
+                <select
+                    name={name}
+                    id={id}
+                    value={propValue}
+                    onChange={onChange}
+                    className="input__field"
+                >
+                    {children}
+                </select>
+                {error && <div className="error">{error}</div>}
+            </div>
+        );
     }
-  }, [values[name], isNumber, name]);
+    const formatNumber = (numStr) => {
+        return numStr.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    };
 
-  const handleChange = (e) => {
-    if (isNumber) {
-      const rawValue = e.target.value.replace(/[^0-9]/g, "");
-      const numericValue = Math.max(0, Number(rawValue || 0));
-      setFieldValue(name, numericValue);
-    } else {
-      setFieldValue(name, e.target.value);
-    }
-  };
-
-  return (
-    <div className="input">
-      {label && <label className="input__label" htmlFor={id}>{label}</label>}
-      <Field
-        as="input"
-        name={name}
-        id={id}
-        placeholder={placeholder}
-        value={displayValue}
-        onChange={handleChange}
-        className="input__field"
-        autoComplete="off"
-      />
-      <Error name={name}>
-        {(error) => <div className="error">{error}</div>}
-      </Error>
-    </div>
-  );
+    const handleBlur = () => {
+        if (isNumber && displayValue) {
+            setDisplayValue(formatNumber(displayValue));
+        }
+    };
+    return (
+        <div className="input">
+            {label && <label className="input__label" htmlFor={id}>{label}</label>}
+            <input
+                type="text"
+                name={name}
+                id={id}
+                placeholder={placeholder}
+                value={displayValue}
+                onChange={handleChange}
+                className="input__field"
+                autoComplete="off"
+                onBlur={handleBlur}
+                onFocus={() => {
+                    if (isNumber && displayValue) {
+                        setDisplayValue(displayValue.replace(/,/g, ''));
+                    }
+                }}
+            />
+            {error && <div className="error">{error}</div>}
+        </div>
+    );
 };

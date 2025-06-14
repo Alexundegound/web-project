@@ -1,15 +1,22 @@
 .navbar {
-    background-color: white;
-    border-radius: 20px;
-    width: 700px;
-    height: 100px;
-    padding: 20px;
-    margin: 0 auto;
-    order: 2;
+    height: inherit;
+    width: 75px;
+    background-color: rgb(34, 34, 34);
     &__list {
         display: flex;
-        justify-content: space-between;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 40px;
+        padding: 15px;
         box-sizing: border-box;
         list-style: none;
+    }
+    &__item {
+        svg {
+            width: 30px;
+            height: 30px;
+            color: white;
+        }
     }
 }

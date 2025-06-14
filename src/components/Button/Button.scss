@@ -1,5 +1,15 @@
 .button {
-    background-color: white;
+    background-color: green;
     width: 100%;
     height: 50px;
+    border: none;
+    border-radius: 20px;
+    color: white;
+    cursor: pointer;
+    &--delete {
+        background-color: red;
+    }
+    &--close {
+        background-color: gray;
+    }
 }

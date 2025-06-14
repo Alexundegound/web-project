@@ -20,10 +20,8 @@ export const dataSlice = createSlice({
   initialState,
   reducers: {
     addCheck: (state, action) => {
-      state.checks.push({
-        ...action.payload,
-        id: Date.now(),
-      });
+      console.log("Добавляем чек:", action.payload);
+      state.checks.push(action.payload);
 
       try {
         localStorage.setItem("checks", JSON.stringify(state.checks));
@@ -31,8 +29,19 @@ export const dataSlice = createSlice({
         console.error("Ошибка сохранения данных", e);
       }
     },
-  },
+    removeCheck: (state, action) => {
+      state.checks = state.checks.filter(check => check.id !== action.payload);
+      localStorage.setItem("checks", JSON.stringify(state.checks));
+    },
+    updateCheck: (state, action) => {
+      const index = state.checks.findIndex(check => check.id === action.payload.id);
+      if (index !== -1) {
+        state.checks[index] = action.payload;
+        localStorage.setItem("checks", JSON.stringify(state.checks));
+      }
+    },
+  }
 });
 
-export const { addCheck } = dataSlice.actions;
+export const { addCheck, removeCheck, updateCheck } = dataSlice.actions;
 export default dataSlice.reducer;

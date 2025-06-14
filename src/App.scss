@@ -1,12 +1,15 @@
-body {
-    background-color: blue;
+
+body, html {
+  background-color: rgb(20, 20, 20);
+  overflow: hidden;
+}
+span, h1, h2, p, label, input, select {
+  color: white;
 }
 .wrapper {
-  width: 1440px;
-  margin: 0 auto;
   display: flex;
-  flex-direction: column;
   gap: 40px;
+  height: 100vh;
 }
 
 .main {
@@ -14,7 +17,10 @@ body {
     margin-top: 40px;
   }
 }
-
+.section {
+  width: 95%;
+  margin: 0 auto;
+}
 .error {
   position: absolute;
   color: red;
