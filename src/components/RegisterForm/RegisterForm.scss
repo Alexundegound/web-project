@@ -8,9 +8,9 @@
     width: 600px;
     height: 550px;
     padding: 50px;
-    background-color: white;
+    background-color: rgb(34, 34, 34);
     border-radius: 30px;
-
+    border: 1px solid white;
     &__input-sum {
         width: 100%;
         display: flex;
